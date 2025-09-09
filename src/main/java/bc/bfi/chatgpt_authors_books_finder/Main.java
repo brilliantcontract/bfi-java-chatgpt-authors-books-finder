@@ -207,6 +207,7 @@ public class Main {
             } else {
                 url = "";
             }
+            final String domain = getDomain(url);
             final String domainCountry = getDomainCountry(url);
             final String snippet = item.containsKey("snippet") ? item.getString("snippet") : "";
             final String isExact;
@@ -228,6 +229,7 @@ public class Main {
             System.out.println("Author: " + author);
             System.out.println("Title: " + title);
             System.out.println("URL: " + url);
+            System.out.println("Domain: " + domain);
             System.out.println("Domain Country: " + domainCountry);
             System.out.println("Snippet: " + snippet);
             System.out.println("Is Exact Match: " + isExact);
@@ -246,6 +248,7 @@ public class Main {
                     author,
                     title,
                     url,
+                    domain,
                     snippet,
                     isExact,
                     aiVerified,
@@ -261,7 +264,7 @@ public class Main {
         }
     }
 
-    private static String getDomainCountry(final String url) {
+    static String getDomain(final String url) {
         if (url == null || url.length() == 0) {
             return "";
         }
@@ -279,6 +282,15 @@ public class Main {
         final int colonIdx = host.indexOf(':');
         if (colonIdx >= 0) {
             host = host.substring(0, colonIdx);
+        }
+        assert host.length() > 0 : "Host part is empty for URL: " + url;
+        return host;
+    }
+
+    static String getDomainCountry(final String url) {
+        final String host = getDomain(url);
+        if (host.length() == 0) {
+            return "";
         }
         final int dotIdx = host.lastIndexOf('.');
         if (dotIdx < 0 || dotIdx >= host.length() - 1) {

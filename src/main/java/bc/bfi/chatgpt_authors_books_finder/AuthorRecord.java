@@ -8,6 +8,7 @@ public class AuthorRecord {
     private final String author;
     private final String title;
     private final String url;
+    private final String domain;
     private final String snippet;
     private final String isExactMatch;
     private final String aiVerified;
@@ -25,6 +26,7 @@ public class AuthorRecord {
             final String author,
             final String title,
             final String url,
+            final String domain,
             final String snippet,
             final String isExactMatch,
             final String aiVerified,
@@ -40,6 +42,7 @@ public class AuthorRecord {
         this.author = Objects.requireNonNull(author, "author");
         this.title = Objects.requireNonNull(title, "title");
         this.url = Objects.requireNonNull(url, "url");
+        this.domain = Objects.requireNonNull(domain, "domain");
         this.snippet = Objects.requireNonNull(snippet, "snippet");
         this.isExactMatch = Objects.requireNonNull(isExactMatch, "isExactMatch");
         this.aiVerified = Objects.requireNonNull(aiVerified, "aiVerified");
@@ -67,6 +70,10 @@ public class AuthorRecord {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getDomain() {
+        return domain;
     }
 
     public String getSnippet() {
