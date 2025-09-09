@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Objects;
 
 public class Base {
 
@@ -31,7 +31,7 @@ public class Base {
     /**
      * Constructor for tests which allows to inject connection instance.
      */
-    Base(Connection connection) {
+    Base(final Connection connection) {
         this.connection = connection;
     }
 
@@ -51,42 +51,45 @@ public class Base {
         }
     }
 
-    void add(ChannelAbout channel) {
-        if (channel == null) {
-            return;
-        }
+    void add(final AuthorRecord record) {
+        Objects.requireNonNull(record, "record");
 
         try {
             connect();
 
-            String sql = "INSERT INTO " + DB_TABLE
-                    + "(url, description, videos, views, join_date, link_to_instagram, link_to_facebook, link_to_twitter, link_to_tiktok, other_links, verification, thumbnail)"
-                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            final String sql = "INSERT INTO " + DB_TABLE
+                    + "(position, author, title, url, snippet, is_exact_match, ai_verified, success, total_results, processing_time_ms, ai_used, search_engine, filters_applied, timestamp, domain_country)"
+                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, channel.getUrl());
-                stmt.setString(2, channel.getDescription());
-                stmt.setString(3, channel.getVideosAsNumber());
-                stmt.setString(4, channel.getViewsAsNumber());
-                stmt.setString(5, channel.getJoinDate());
-                stmt.setString(6, channel.getLinkToInstagram());
-                stmt.setString(7, channel.getLinkToFacebook());
-                stmt.setString(8, channel.getLinkToTwitter());
-                stmt.setString(9, channel.getLinkToTiktok());
-                stmt.setString(10, channel.getOtherLinks());
-                stmt.setString(11, channel.getVerification());
-                stmt.setString(12, channel.getThumbnail());
+                stmt.setString(1, record.getPosition());
+                stmt.setString(2, record.getAuthor());
+                stmt.setString(3, record.getTitle());
+                stmt.setString(4, record.getUrl());
+                stmt.setString(5, record.getSnippet());
+                stmt.setString(6, record.getIsExactMatch());
+                stmt.setString(7, record.getAiVerified());
+                stmt.setString(8, record.getSuccess());
+                stmt.setString(9, record.getTotalResults());
+                stmt.setString(10, record.getProcessingTimeMs());
+                stmt.setString(11, record.getAiUsed());
+                stmt.setString(12, record.getSearchEngine());
+                stmt.setString(13, record.getFiltersApplied());
+                stmt.setString(14, record.getTimestamp());
+                stmt.setString(15, record.getDomainCountry());
 
                 stmt.executeUpdate();
             } catch (SQLIntegrityConstraintViolationException ex) {
-                LOGGER.log(Level.WARNING, "Skip duplicate URL in database: " + channel.getUrl(), ex);
+                LOGGER.log(Level.WARNING, "Skip duplicate URL in database: " + record.getUrl(), ex);
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 
-    boolean exists(String url) {
+    boolean exists(final String url) {
+        Objects.requireNonNull(url, "url");
+
         boolean found = false;
 
         try {

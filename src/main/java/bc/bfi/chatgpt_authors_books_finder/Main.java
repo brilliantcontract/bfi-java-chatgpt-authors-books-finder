@@ -51,16 +51,21 @@ public class Main {
             baseUrl = "http://localhost:3000";
         }
 
-        for (int i = 0; i < authors.size(); i++) {
-            final String author = authors.get(i);
-            System.out.println("Processing author: " + author);
-            try {
-                final JsonObject data = searchAuthor(baseUrl, author);
-                handleAuthorResult(author, data);
-            } catch (IOException ex) {
-                System.out.println("Failed to search: " + ex.getMessage());
+        final Base base = new Base();
+        try {
+            for (int i = 0; i < authors.size(); i++) {
+                final String author = authors.get(i);
+                System.out.println("Processing author: " + author);
+                try {
+                    final JsonObject data = searchAuthor(baseUrl, author);
+                    handleAuthorResult(author, data, base);
+                } catch (IOException ex) {
+                    System.out.println("Failed to search: " + ex.getMessage());
+                }
+                System.out.println();
             }
-            System.out.println();
+        } finally {
+            base.close();
         }
     }
 
@@ -131,9 +136,10 @@ public class Main {
         }
     }
 
-    private static void handleAuthorResult(final String author, final JsonObject data) {
+    private static void handleAuthorResult(final String author, final JsonObject data, final Base base) {
         Objects.requireNonNull(author, "author");
         Objects.requireNonNull(data, "data");
+        Objects.requireNonNull(base, "base");
 
         final JsonArray results;
         if (data.containsKey("results")) {
@@ -234,6 +240,24 @@ public class Main {
             System.out.println("Filters Applied: " + filtersApplied);
             System.out.println("Timestamp: " + timestamp);
             System.out.println("---");
+
+            final AuthorRecord record = new AuthorRecord(
+                    String.valueOf(position),
+                    author,
+                    title,
+                    url,
+                    snippet,
+                    isExact,
+                    aiVerified,
+                    String.valueOf(success),
+                    String.valueOf(totalResults),
+                    String.valueOf(processingTime),
+                    String.valueOf(aiUsed),
+                    searchEngine,
+                    filtersApplied,
+                    timestamp,
+                    domainCountry);
+            base.add(record);
         }
     }
 
