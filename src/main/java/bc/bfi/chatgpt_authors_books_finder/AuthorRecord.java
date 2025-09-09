@@ -36,21 +36,21 @@ public class AuthorRecord {
             final String filtersApplied,
             final String timestamp,
             final String domainCountry) {
-        this.position = Objects.requireNonNull(position, "position");
-        this.author = Objects.requireNonNull(author, "author");
-        this.title = Objects.requireNonNull(title, "title");
-        this.url = Objects.requireNonNull(url, "url");
-        this.snippet = Objects.requireNonNull(snippet, "snippet");
-        this.isExactMatch = Objects.requireNonNull(isExactMatch, "isExactMatch");
-        this.aiVerified = Objects.requireNonNull(aiVerified, "aiVerified");
-        this.success = Objects.requireNonNull(success, "success");
-        this.totalResults = Objects.requireNonNull(totalResults, "totalResults");
-        this.processingTimeMs = Objects.requireNonNull(processingTimeMs, "processingTimeMs");
-        this.aiUsed = Objects.requireNonNull(aiUsed, "aiUsed");
-        this.searchEngine = Objects.requireNonNull(searchEngine, "searchEngine");
-        this.filtersApplied = Objects.requireNonNull(filtersApplied, "filtersApplied");
-        this.timestamp = Objects.requireNonNull(timestamp, "timestamp");
-        this.domainCountry = Objects.requireNonNull(domainCountry, "domainCountry");
+        this.position = Objects.requireNonNull(position, "");
+        this.author = Objects.requireNonNull(author, "");
+        this.title = Objects.requireNonNull(title, "");
+        this.url = Objects.requireNonNull(url, "");
+        this.snippet = Objects.requireNonNull(snippet, "");
+        this.isExactMatch = Objects.requireNonNull(isExactMatch, "");
+        this.aiVerified = Objects.requireNonNull(aiVerified, "");
+        this.success = Objects.requireNonNull(success, "");
+        this.totalResults = Objects.requireNonNull(totalResults, "");
+        this.processingTimeMs = Objects.requireNonNull(processingTimeMs, "");
+        this.aiUsed = Objects.requireNonNull(aiUsed, "");
+        this.searchEngine = Objects.requireNonNull(searchEngine, "");
+        this.filtersApplied = Objects.requireNonNull(filtersApplied, "");
+        this.timestamp = Objects.requireNonNull(timestamp, "");
+        this.domainCountry = Objects.requireNonNull(domainCountry, "");
     }
 
     public String getPosition() {
