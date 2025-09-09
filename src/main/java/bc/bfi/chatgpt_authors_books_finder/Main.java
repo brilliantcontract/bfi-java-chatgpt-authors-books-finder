@@ -1,4 +1,4 @@
-package bc.bfi;
+package bc.bfi.chatgpt_authors_books_finder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AuthorsBooksFinder {
+public class Main {
     private static final String OPEN_LIBRARY_URL = "https://openlibrary.org/search.json?author=";
 
     public static void main(String[] args) throws IOException {
