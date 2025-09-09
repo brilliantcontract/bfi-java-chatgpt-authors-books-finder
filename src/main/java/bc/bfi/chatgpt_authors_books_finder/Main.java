@@ -109,7 +109,14 @@ public class Main {
             try {
                 final int status = response.getCode();
                 assert status == 200 : "Unexpected HTTP status: " + status;
-                final String body = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+                final String body;
+                try {
+                    body = EntityUtils.toString(response.getEntity(), "UTF-8");
+                } catch (org.apache.hc.core5.http.ParseException ex) {
+                    throw new IOException("Failed to parse response entity", ex);
+                }
+
                 final JsonReader reader = Json.createReader(new StringReader(body));
                 try {
                     return reader.readObject();
