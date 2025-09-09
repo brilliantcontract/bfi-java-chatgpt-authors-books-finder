@@ -1,12 +1,16 @@
 package bc.bfi.chatgpt_authors_books_finder;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -31,8 +35,6 @@ public class Main {
             return;
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-
         for (String author : authors) {
             System.out.println("Author: " + author);
             try {
@@ -52,16 +54,21 @@ public class Main {
                         .collect(Collectors.joining("\n"));
                 connection.disconnect();
 
-                JsonNode root = mapper.readTree(response);
-                JsonNode docs = root.path("docs");
-                if (!docs.isArray() || docs.size() == 0) {
-                    System.out.println("  No books found.");
-                } else {
-                    int count = Math.min(3, docs.size());
-                    for (int i = 0; i < count; i++) {
-                        JsonNode doc = docs.get(i);
-                        String title = doc.path("title").asText("");
-                        System.out.println("  - " + title);
+                try (JsonReader jsonReader = Json.createReader(new StringReader(response))) {
+                    JsonObject root = jsonReader.readObject();
+                    JsonArray docs = root.getJsonArray("docs");
+                    if (docs == null || docs.isEmpty()) {
+                        System.out.println("  No books found.");
+                    } else {
+                        int count = Math.min(3, docs.size());
+                        for (int i = 0; i < count; i++) {
+                            JsonValue docValue = docs.get(i);
+                            if (docValue.getValueType() == JsonValue.ValueType.OBJECT) {
+                                JsonObject doc = docValue.asJsonObject();
+                                String title = doc.getString("title", "");
+                                System.out.println("  - " + title);
+                            }
+                        }
                     }
                 }
             } catch (Exception e) {
