@@ -58,7 +58,7 @@ public class Base {
             connect();
 
             final String sql = "INSERT INTO " + DB_TABLE
-                    + "(position, author, title, url, domain, snippet, is_exact_match, ai_verified, success, total_results, processing_time_ms, ai_used, search_engine, filters_applied, timestamp, domain_country)"
+                    + "(position, author, title, url, snippet, is_exact_match, ai_verified, success, total_results, processing_time_ms, ai_used, search_engine, filters_applied, timestamp, domain_country, domain)"
                     + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -66,18 +66,18 @@ public class Base {
                 stmt.setString(2, record.getAuthor());
                 stmt.setString(3, record.getTitle());
                 stmt.setString(4, record.getUrl());
-                stmt.setString(5, record.getDomain());
-                stmt.setString(6, record.getSnippet());
-                stmt.setString(7, record.getIsExactMatch());
-                stmt.setString(8, record.getAiVerified());
-                stmt.setString(9, record.getSuccess());
-                stmt.setString(10, record.getTotalResults());
-                stmt.setString(11, record.getProcessingTimeMs());
-                stmt.setString(12, record.getAiUsed());
-                stmt.setString(13, record.getSearchEngine());
-                stmt.setString(14, record.getFiltersApplied());
-                stmt.setString(15, record.getTimestamp());
-                stmt.setString(16, record.getDomainCountry());
+                stmt.setString(5, record.getSnippet());
+                stmt.setString(6, record.getIsExactMatch());
+                stmt.setString(7, record.getAiVerified());
+                stmt.setString(8, record.getSuccess());
+                stmt.setString(9, record.getTotalResults());
+                stmt.setString(10, record.getProcessingTimeMs());
+                stmt.setString(11, record.getAiUsed());
+                stmt.setString(12, record.getSearchEngine());
+                stmt.setString(13, record.getFiltersApplied());
+                stmt.setString(14, record.getTimestamp());
+                stmt.setString(15, record.getDomainCountry());
+                stmt.setString(16, record.getDomain());
 
                 stmt.executeUpdate();
             } catch (SQLIntegrityConstraintViolationException ex) {

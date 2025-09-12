@@ -43,7 +43,8 @@ public class BaseTest {
         base.add(record);
 
         // Assertion.
-        verify(stmt).setString(5, record.getDomain());
+        verify(stmt).setString(5, record.getSnippet());
+        verify(stmt).setString(16, record.getDomain());
         assertThat(record.getDomain(), is("example.com"));
     }
 }
