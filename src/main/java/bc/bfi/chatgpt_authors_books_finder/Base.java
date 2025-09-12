@@ -11,16 +11,6 @@ import java.util.Objects;
 
 public class Base {
 
-    static final String DB_HOST = "3.17.216.88";
-    static final int DB_PORT = 3306;
-    static final String DB_NAME = "chatgpt_authors_books_finder";
-    static final String DB_USER = "root";
-    static final String DB_PASSWORD = "RootSecret1!";
-    static final String DB_TABLE = "authors";
-
-    private static final String DB_URL
-            = "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
-
     private static final Logger LOGGER = Logger.getLogger(Base.class.getName());
 
     private Connection connection;
@@ -37,7 +27,10 @@ public class Base {
 
     void connect() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            connection = DriverManager.getConnection(
+                    Config.DB_URL,
+                    Config.DB_USER,
+                    Config.DB_PASSWORD);
         }
     }
 
@@ -57,7 +50,7 @@ public class Base {
         try {
             connect();
 
-            final String sql = "INSERT INTO " + DB_TABLE
+            final String sql = "INSERT INTO " + Config.DB_TABLE
                     + "(position, author, title, url, snippet, is_exact_match, ai_verified, success, total_results, processing_time_ms, ai_used, search_engine, filters_applied, timestamp, domain_country, domain)"
                     + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -96,7 +89,7 @@ public class Base {
         try {
             connect();
 
-            String sql = "SELECT 1 FROM " + DB_TABLE + " WHERE url = ? LIMIT 1";
+            String sql = "SELECT 1 FROM " + Config.DB_TABLE + " WHERE url = ? LIMIT 1";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, url);
 

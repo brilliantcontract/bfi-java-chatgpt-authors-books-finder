@@ -43,12 +43,12 @@ public class Main {
             return;
         }
 
-        final String baseUrlEnv = System.getenv("SERVICE_BASE_URL");
+        final String baseUrlEnv = System.getenv(Config.SERVICE_BASE_URL_ENV);
         final String baseUrl;
         if (baseUrlEnv != null && baseUrlEnv.length() > 0) {
             baseUrl = baseUrlEnv;
         } else {
-            baseUrl = "http://localhost:8080";
+            baseUrl = Config.BASE_URL;
         }
 
         final Base base = new Base();
