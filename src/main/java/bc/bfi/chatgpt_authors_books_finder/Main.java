@@ -48,7 +48,7 @@ public class Main {
         if (baseUrlEnv != null && baseUrlEnv.length() > 0) {
             baseUrl = baseUrlEnv;
         } else {
-            baseUrl = "http://localhost:3000";
+            baseUrl = "http://localhost:8080";
         }
 
         final Base base = new Base();
@@ -106,7 +106,7 @@ public class Main {
 
         final CloseableHttpClient client = HttpClients.createDefault();
         try {
-            final HttpPost post = new HttpPost(baseUrl + "/search");
+            final HttpPost post = new HttpPost(baseUrl + "/search.php");
             final String json = "{\"author\":\"" + author.replace("\"", "\\\"") + "\"}";
             final StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
             post.setEntity(entity);
