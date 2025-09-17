@@ -26,6 +26,7 @@ public class BaseTest {
                 "Snippet",
                 "true",
                 "true",
+                "true",
                 "1",
                 "10",
                 "false",

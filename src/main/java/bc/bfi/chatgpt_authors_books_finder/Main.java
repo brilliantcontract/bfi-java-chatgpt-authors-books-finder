@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +18,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -106,11 +110,12 @@ public class Main {
 
         final CloseableHttpClient client = HttpClients.createDefault();
         try {
-            final HttpPost post = new HttpPost(baseUrl + "/search.php");
-            final String json = "{\"author\":\"" + author.replace("\"", "\\\"") + "\"}";
-            final StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
-            post.setEntity(entity);
-            final CloseableHttpResponse response = client.execute(post);
+            final HttpGet get = new HttpGet(baseUrl + "/api-playground.php/" + URLEncoder.encode(author, StandardCharsets.UTF_8.toString()));
+//            final HttpPost post = new HttpPost(baseUrl + "/api-playground.php");
+//            final String json = "{\"author\":\"" + author.replace("\"", "\\\"") + "\"}";
+//            final StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
+//            post.setEntity(entity);
+            final CloseableHttpResponse response = client.execute(get);
             try {
                 final int status = response.getCode();
                 assert status == 200 : "Unexpected HTTP status: " + status;
@@ -304,4 +309,3 @@ public class Main {
         return "";
     }
 }
-
