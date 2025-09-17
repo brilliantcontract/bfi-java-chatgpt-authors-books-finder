@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -20,13 +19,10 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 
-import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.apache.hc.core5.http.io.entity.StringEntity;
 
 public class Main {
 
@@ -110,11 +106,13 @@ public class Main {
 
         final CloseableHttpClient client = HttpClients.createDefault();
         try {
-            final HttpGet get = new HttpGet(baseUrl + "/api-playground.php/" + URLEncoder.encode(author, StandardCharsets.UTF_8.toString()));
-//            final HttpPost post = new HttpPost(baseUrl + "/api-playground.php");
-//            final String json = "{\"author\":\"" + author.replace("\"", "\\\"") + "\"}";
-//            final StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
-//            post.setEntity(entity);
+            final String encodedAuthor = URLEncoder.encode(author, StandardCharsets.UTF_8.toString());
+            final HttpGet get = new HttpGet(baseUrl + "/api-search.php/" + encodedAuthor);
+            get.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0");
+            get.setHeader("Accept", "*/*");
+            get.setHeader("Accept-Language", "en-US,en;q=0.5");
+            get.setHeader("Referer", baseUrl + "/api-playground.php");
+            get.setHeader("X-API-Key", Config.API_KEY);
             final CloseableHttpResponse response = client.execute(get);
             try {
                 final int status = response.getCode();
