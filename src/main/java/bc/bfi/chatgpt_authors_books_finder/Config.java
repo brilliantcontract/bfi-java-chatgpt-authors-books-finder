@@ -9,11 +9,11 @@ public final class Config {
     public static final String DB_PASSWORD = "RootSecret1!";
     public static final String DB_TABLE = "authors";
     public static final String DB_URL =
-            "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
+            "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME + "?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
 
     public static final String SERVICE_BASE_URL_ENV = "SERVICE_BASE_URL";
     public static final String BASE_URL = "http://localhost:8080";
-    public static final String API_KEY = "ask_live_7f9d2e1a4b8c6f3e9d2c5a8b7e4f1a9c";
+    public static final String CHATGPT_API_KEY = "ask_live_7f9d2e1a4b8c6f3e9d2c5a8b7e4f1a9c";
 
     private Config() {
     }

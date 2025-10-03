@@ -112,7 +112,7 @@ public class Main {
             get.setHeader("Accept", "*/*");
             get.setHeader("Accept-Language", "en-US,en;q=0.5");
             get.setHeader("Referer", baseUrl + "/api-playground.php");
-            get.setHeader("X-API-Key", Config.API_KEY);
+            get.setHeader("X-API-Key", Config.CHATGPT_API_KEY);
             final CloseableHttpResponse response = client.execute(get);
             try {
                 final int status = response.getCode();
