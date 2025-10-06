@@ -11,11 +11,24 @@ public final class Config {
     static final String DB_PASSWORD = "te83NECug38ueP";
     static final String DB_DATABASE = "scrapers";
     static final String DB_TABLE = "chatgpt_websites_finder.chatgpt_authors";
+    static final String DB_URL = buildDbUrl();
+    static final String DB_USER = DB_USERNAME;
 
     public static final String SERVICE_BASE_URL_ENV = "SERVICE_BASE_URL";
     public static final String BASE_URL = "http://localhost:8080";
     public static final String CHATGPT_API_KEY = "ask_live_7f9d2e1a4b8c6f3e9d2c5a8b7e4f1a9c";
 
     private Config() {
+    }
+
+    private static String buildDbUrl() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("jdbc:postgresql://");
+        builder.append(DB_HOST);
+        builder.append(":");
+        builder.append(DB_PORT);
+        builder.append("/");
+        builder.append(DB_DATABASE);
+        return builder.toString();
     }
 }

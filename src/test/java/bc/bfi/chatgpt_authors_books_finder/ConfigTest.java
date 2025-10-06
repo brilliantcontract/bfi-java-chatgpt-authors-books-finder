@@ -9,7 +9,7 @@ public class ConfigTest {
     @Test
     public void dbUrlIsConstructedProperly() {
         // Initialization.
-        final String expected = "jdbc:mysql://3.17.216.88:3306/chatgpt_authors_books_finder";
+        final String expected = "jdbc:postgresql://3.140.167.34:5432/scrapers";
 
         // Execution.
         final String url = Config.DB_URL;

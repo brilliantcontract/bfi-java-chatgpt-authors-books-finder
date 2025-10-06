@@ -1,8 +1,5 @@
 package bc.bfi.chatgpt_authors_books_finder;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
@@ -12,6 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -37,7 +40,7 @@ public class Main {
     }
 
     public static void main(final String[] args) {
-        final List<String> authors = readAuthorsFromFile("authors-to-check.txt");
+        final List<String> authors = readAuthorsFromDatabase();
         if (authors.isEmpty()) {
             System.out.println("No authors to process.");
             return;
@@ -69,35 +72,55 @@ public class Main {
         }
     }
 
-    private static List<String> readAuthorsFromFile(final String fileName) {
-        final List<String> list = new ArrayList<String>();
-        final File file = new File(fileName);
-        if (!file.exists()) {
-            System.out.println("File not found: " + fileName);
-            return list;
-        }
-        BufferedReader reader = null;
+    private static List<String> readAuthorsFromDatabase() {
+        final List<String> authors = new ArrayList<String>();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
         try {
-            reader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                final String trimmed = line.trim();
-                if (trimmed.length() > 0) {
-                    list.add(trimmed);
+            connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER, Config.DB_PASSWORD);
+
+            final String sql = "SELECT author FROM chatgpt_websites_finder.next_batch_to_scrape_vw";
+            statement = connection.prepareStatement(sql);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                final String value = resultSet.getString("author");
+                if (value != null) {
+                    final String trimmed = value.trim();
+                    if (trimmed.length() > 0) {
+                        authors.add(trimmed);
+                    }
                 }
             }
-        } catch (IOException ex) {
-            System.out.println("Read failed: " + ex.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Failed to load authors from database: " + ex.getMessage());
         } finally {
-            if (reader != null) {
+            if (resultSet != null) {
                 try {
-                    reader.close();
-                } catch (IOException ignore) {
+                    resultSet.close();
+                } catch (SQLException ignore) {
+                    // ignore
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ignore) {
+                    // ignore
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ignore) {
                     // ignore
                 }
             }
         }
-        return list;
+
+        return authors;
     }
 
     private static JsonObject searchAuthor(final String baseUrl, final String author) throws IOException {
