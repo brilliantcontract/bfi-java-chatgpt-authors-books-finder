@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Objects;
@@ -12,6 +11,7 @@ import java.util.Objects;
 public class Base {
 
     private static final Logger LOGGER = Logger.getLogger(Base.class.getName());
+    private static final String UNIQUE_CONSTRAINT_SQL_STATE = "23505";
 
     private Connection connection;
 
@@ -29,7 +29,7 @@ public class Base {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(
                     Config.DB_URL,
-                    Config.DB_USER,
+                    Config.DB_USERNAME,
                     Config.DB_PASSWORD);
         }
     }
@@ -73,8 +73,12 @@ public class Base {
                 stmt.setString(16, record.getDomain());
 
                 stmt.executeUpdate();
-            } catch (SQLIntegrityConstraintViolationException ex) {
-                LOGGER.log(Level.WARNING, "Skip duplicate URL in database: " + record.getUrl(), ex);
+            } catch (SQLException ex) {
+                if (UNIQUE_CONSTRAINT_SQL_STATE.equals(ex.getSQLState())) {
+                    LOGGER.log(Level.WARNING, "Skip duplicate URL in database: " + record.getUrl(), ex);
+                } else {
+                    throw ex;
+                }
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
