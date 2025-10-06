@@ -10,10 +10,6 @@ public final class Config {
     static final String DB_USERNAME = "redash";
     static final String DB_PASSWORD = "te83NECug38ueP";
     static final String DB_DATABASE = "scrapers";
-    static final String DB_URL = "jdbc:postgresql://"
-            + DB_HOST + ":"
-            + DB_PORT + "/"
-            + DB_DATABASE;
     static final String DB_TABLE = "chatgpt_websites_finder.chatgpt_authors";
     static final String DB_URL = buildDbUrl();
     static final String DB_USER = DB_USERNAME;

@@ -30,6 +30,7 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 public class Main {
 
     private static final Map<String, String> COUNTRY_MAP = new HashMap<String, String>();
+    private static final String AUTHORS_QUERY = "select author from chatgpt_websites_finder.next_batch_to_scrape_vw";
 
     static {
         COUNTRY_MAP.put("us", "United States");
@@ -81,18 +82,12 @@ public class Main {
         try {
             connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER, Config.DB_PASSWORD);
 
-            final String sql = "SELECT author FROM chatgpt_websites_finder.next_batch_to_scrape_vw";
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(AUTHORS_QUERY);
 
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 final String value = resultSet.getString("author");
-                if (value != null) {
-                    final String trimmed = value.trim();
-                    if (trimmed.length() > 0) {
-                        authors.add(trimmed);
-                    }
-                }
+                addAuthorIfValid(authors, value);
             }
         } catch (SQLException ex) {
             System.out.println("Failed to load authors from database: " + ex.getMessage());
@@ -121,6 +116,21 @@ public class Main {
         }
 
         return authors;
+    }
+
+    static void addAuthorIfValid(final List<String> authors, final String value) {
+        Objects.requireNonNull(authors, "authors");
+
+        if (value == null) {
+            return;
+        }
+
+        final String trimmed = value.trim();
+        if (trimmed.length() == 0) {
+            return;
+        }
+
+        authors.add(trimmed);
     }
 
     private static JsonObject searchAuthor(final String baseUrl, final String author) throws IOException {
