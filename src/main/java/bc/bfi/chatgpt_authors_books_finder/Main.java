@@ -172,7 +172,7 @@ public class Main {
         }
     }
 
-    private static void handleAuthorResult(final String author, final JsonObject data, final Base base) {
+    static void handleAuthorResult(final String author, final JsonObject data, final Base base) {
         Objects.requireNonNull(author, "author");
         Objects.requireNonNull(data, "data");
         Objects.requireNonNull(base, "base");
@@ -182,11 +182,6 @@ public class Main {
             results = data.getJsonArray("results");
         } else {
             results = Json.createArrayBuilder().build();
-        }
-
-        if (results.size() == 0) {
-            System.out.println("No results for " + author);
-            return;
         }
 
         final boolean success = data.containsKey("success") && data.getBoolean("success");
@@ -230,6 +225,30 @@ public class Main {
             searchEngine = "";
             filtersApplied = "";
             timestamp = "";
+        }
+
+        if (results.size() == 0) {
+            System.out.println("No results for " + author);
+
+            final AuthorRecord record = new AuthorRecord(
+                    "0",
+                    author,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    String.valueOf(success),
+                    String.valueOf(totalResults),
+                    String.valueOf(processingTime),
+                    String.valueOf(aiUsed),
+                    searchEngine,
+                    filtersApplied,
+                    timestamp,
+                    "");
+            base.add(record);
+            return;
         }
 
         for (int i = 0; i < results.size(); i++) {

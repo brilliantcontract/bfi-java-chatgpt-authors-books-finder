@@ -3,7 +3,13 @@ package bc.bfi.chatgpt_authors_books_finder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -47,5 +53,35 @@ public class MainTest {
 
         // Assertion.
         assertThat(authors.size(), is(0));
+    }
+
+    @Test
+    public void handleAuthorResultStoresEmptySearches() {
+        // Initialization.
+        final String author = "Unknown Writer";
+        final JsonObject data = Json.createObjectBuilder()
+                .add("results", Json.createArrayBuilder().build())
+                .add("success", false)
+                .add("total_results", 0)
+                .add("processing_time_ms", 0)
+                .add("ai_analysis_used", false)
+                .add("metadata", Json.createObjectBuilder()
+                        .add("search_engine", "bing")
+                        .add("filters_applied", Json.createArrayBuilder())
+                        .add("timestamp", "2024-01-01T00:00:00Z")
+                        .build())
+                .build();
+        final Base base = Mockito.mock(Base.class);
+        final ArgumentCaptor<AuthorRecord> captor = ArgumentCaptor.forClass(AuthorRecord.class);
+
+        // Execution.
+        Main.handleAuthorResult(author, data, base);
+
+        // Assertion.
+        Mockito.verify(base).add(captor.capture());
+        final AuthorRecord record = captor.getValue();
+        assertThat(record.getAuthor(), is(author));
+        assertThat(record.getPosition(), is("0"));
+        assertThat(record.getTitle(), is(""));
     }
 }
