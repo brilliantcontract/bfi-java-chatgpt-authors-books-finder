@@ -358,4 +358,15 @@ public class Main {
         }
         return "";
     }
+
+    static void processContactPage(
+            final Website website,
+            final String contactPageUrl,
+            final String contactPageHtml,
+            final ContactFormDetector detector) {
+        Objects.requireNonNull(website, "website");
+        Objects.requireNonNull(detector, "detector");
+
+        detector.updateWebsiteContactInfo(website, contactPageUrl, contactPageHtml);
+    }
 }
