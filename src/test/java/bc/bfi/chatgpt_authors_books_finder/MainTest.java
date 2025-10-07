@@ -84,4 +84,19 @@ public class MainTest {
         assertThat(record.getPosition(), is("0"));
         assertThat(record.getTitle(), is(""));
     }
+
+    @Test
+    public void processContactPageDelegatesToDetector() {
+        // Initialization.
+        final Website website = new Website("https://example.com");
+        final ContactFormDetector detector = Mockito.mock(ContactFormDetector.class);
+        final String contactUrl = "https://example.com/contact";
+        final String html = "<html></html>";
+
+        // Execution.
+        Main.processContactPage(website, contactUrl, html, detector);
+
+        // Assertion.
+        Mockito.verify(detector).updateWebsiteContactInfo(website, contactUrl, html);
+    }
 }
