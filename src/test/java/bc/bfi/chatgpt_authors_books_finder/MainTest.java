@@ -93,7 +93,7 @@ public class MainTest {
         final String expectedAuthor = "98 Degrees";
 
         // Execution.
-        final List<String> authors = Main.readAuthors();
+        final List<String> authors = Main.readAuthorsToBeProcessed();
 
         // Assertion.
         assertThat("Authors list should not be empty", authors.isEmpty(), is(false));

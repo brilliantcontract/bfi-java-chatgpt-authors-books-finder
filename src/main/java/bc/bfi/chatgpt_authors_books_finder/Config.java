@@ -5,7 +5,7 @@ public final class Config {
     /**
      * Tets mode.
      */
-    static final Boolean isTestMode = true;
+    static final Boolean IS_TEST_MODE = true;
     static final String FILE_WITH_TEST_AUTHORS = "authors-to-check.txt";
 
     /**

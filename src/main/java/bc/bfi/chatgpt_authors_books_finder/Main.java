@@ -42,7 +42,7 @@ public class Main {
     }
 
     public static void main(final String[] args) {
-        final List<String> authors = readAuthors();
+        final List<String> authors = readAuthorsToBeProcessed();
         if (authors.isEmpty()) {
             System.out.println("No authors to process.");
             return;
@@ -74,8 +74,8 @@ public class Main {
         }
     }
 
-    static List<String> readAuthors() {
-        if (Boolean.TRUE.equals(Config.isTestMode)) {
+    static List<String> readAuthorsToBeProcessed() {
+        if (Boolean.TRUE.equals(Config.IS_TEST_MODE)) {
             return readAuthorsFromFile();
         }
         return readAuthorsFromDatabase();
