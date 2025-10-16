@@ -1,5 +1,7 @@
 package bc.bfi.chatgpt_authors_books_finder;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
@@ -40,7 +42,7 @@ public class Main {
     }
 
     public static void main(final String[] args) {
-        final List<String> authors = readAuthorsFromDatabase();
+        final List<String> authors = readAuthors();
         if (authors.isEmpty()) {
             System.out.println("No authors to process.");
             return;
@@ -70,6 +72,13 @@ public class Main {
         } finally {
             base.close();
         }
+    }
+
+    static List<String> readAuthors() {
+        if (Boolean.TRUE.equals(Config.isTestMode)) {
+            return readAuthorsFromFile();
+        }
+        return readAuthorsFromDatabase();
     }
 
     private static List<String> readAuthorsFromDatabase() {
@@ -109,6 +118,32 @@ public class Main {
                 try {
                     connection.close();
                 } catch (SQLException ignore) {
+                    // ignore
+                }
+            }
+        }
+
+        return authors;
+    }
+
+    private static List<String> readAuthorsFromFile() {
+        final List<String> authors = new ArrayList<String>();
+        BufferedReader reader = null;
+
+        try {
+            reader = new BufferedReader(new FileReader(Config.FILE_WITH_TEST_AUTHORS));
+            String line = reader.readLine();
+            while (line != null) {
+                addAuthorIfValid(authors, line);
+                line = reader.readLine();
+            }
+        } catch (IOException ex) {
+            System.out.println("Failed to load authors from file: " + ex.getMessage());
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ignore) {
                     // ignore
                 }
             }

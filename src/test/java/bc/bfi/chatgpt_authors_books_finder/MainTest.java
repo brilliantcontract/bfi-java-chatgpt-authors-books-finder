@@ -11,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
 public class MainTest {
@@ -83,5 +84,20 @@ public class MainTest {
         assertThat(record.getAuthor(), is(author));
         assertThat(record.getPosition(), is("0"));
         assertThat(record.getTitle(), is(""));
+    }
+
+    @Test
+    public void readAuthorsUsesTestFileInTestMode() {
+        // Initialization.
+        final String expectedFirstAuthor = "\"Achim Schade, Matthias Redieck\"";
+        final String expectedAuthor = "98 Degrees";
+
+        // Execution.
+        final List<String> authors = Main.readAuthors();
+
+        // Assertion.
+        assertThat("Authors list should not be empty", authors.isEmpty(), is(false));
+        assertThat(authors.get(0), is(expectedFirstAuthor));
+        assertThat(authors, hasItem(expectedAuthor));
     }
 }
