@@ -30,7 +30,6 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 public class Main {
 
     private static final Map<String, String> COUNTRY_MAP = new HashMap<String, String>();
-    private static final String AUTHORS_QUERY = "select author from chatgpt_websites_finder.next_batch_to_scrape_vw";
 
     static {
         COUNTRY_MAP.put("us", "United States");
@@ -82,7 +81,7 @@ public class Main {
         try {
             connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER, Config.DB_PASSWORD);
 
-            statement = connection.prepareStatement(AUTHORS_QUERY);
+            statement = connection.prepareStatement(Config.AUTHORS_QUERY);
 
             resultSet = statement.executeQuery();
             while (resultSet.next()) {

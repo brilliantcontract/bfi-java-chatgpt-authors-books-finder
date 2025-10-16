@@ -1,6 +1,12 @@
 package bc.bfi.chatgpt_authors_books_finder;
 
 public final class Config {
+    
+    /**
+     * Tets mode.
+     */
+    static final Boolean isTestMode = true;
+    static final String FILE_WITH_TEST_AUTHORS = "authors-to-check.txt";
 
     /**
      * Database.
@@ -13,6 +19,8 @@ public final class Config {
     static final String DB_TABLE = "chatgpt_websites_finder.chatgpt_authors";
     static final String DB_URL = buildDbUrl();
     static final String DB_USER = DB_USERNAME;
+    
+    static final String AUTHORS_QUERY = "select author from chatgpt_websites_finder.next_batch_to_scrape_vw";
 
     public static final String SERVICE_BASE_URL_ENV = "SERVICE_BASE_URL";
     public static final String BASE_URL = "http://localhost:8080";
